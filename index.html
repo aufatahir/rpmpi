@@ -1,0 +1,1701 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rekod Perkembangan Murid Pendidikan Islam</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Naskh+Arabic:wght@400;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- html2pdf.js for high-quality PDF generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        arabic: ['Noto Naskh Arabic', 'serif'],
+                    },
+                    colors: {
+                        primary: {
+                            50: '#f2faf5',
+                            100: '#e2f5ea',
+                            200: '#c9edd7',
+                            300: '#a2dbba',
+                            400: '#72c196',
+                            500: '#4da679',
+                            600: '#3a8b62',
+                            700: '#307050',
+                            800: '#285941',
+                            900: '#224a37',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom scrollbar styling for modern aesthetics */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        /* Style for printing */
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+            .print-only {
+                display: block !important;
+            }
+            body {
+                background-color: white !important;
+            }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col antialiased">
+
+    <div id="app" class="flex flex-col min-h-screen"></div>
+
+    <!-- React and ReactDOM CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+    <!-- Babel CDN for JSX -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.22.5/babel.min.js"></script>
+
+    <script type="text/babel">
+        const { useState, useEffect, useMemo, useRef } = React;
+
+        const STUDENT_DATA = {
+            "Tahun 4": {
+                "4 Kenanga": [
+                    "'AISYAH MUNIRAH BINTI HISHAM",
+                    "AA'ESYAH ZULFAH BINTI MOHD ZIKRI IZHAM",
+                    "ADWA RAHADATUL AISY",
+                    "AHMAD DARRYL RAFAEL BIN RUSYDI",
+                    "AHMAD MISHARY AKWA BIN AHMAD IKMAL",
+                    "AISYAH FAIHA BINTI MOHAMMAD IZZUDIN",
+                    "AISYAH HUMAIRA BINTI MOHD IRSHAD SHAFIQ",
+                    "AISYAH SOFIA BINTI AZRAN",
+                    "AMMAR MUZHAFFAR BIN MUZARIMAN",
+                    "AQIL AHWAZ BIN AHMAD AFIQ",
+                    "DANISH AIMAN BIN ABD FAIZAL",
+                    "DHIA AIRINA BATRISYA BINTI MOHD FAIZAL",
+                    "DHIA KHAYRA SAFIYA BINTI AZID",
+                    "HASYA MALIKA BINTI MOHD SHAZLY",
+                    "KAYYISA SOFIA BINTI MOHAMMED KHAIRI",
+                    "KHAIRUL ZAHIRULHAQ BIN KHAIRUL SHAHNAN",
+                    "LAYYINA LUTHFIYAH BINTI MUHAMMAD NAJIB",
+                    "MUHAMAD DANISH HARRAZ BIN MUHAMAD AL FIRDAUS",
+                    "MUHAMMAD ABID TAQIUDDIN BIN MOHD ARMIZI",
+                    "MUHAMMAD ALIF MUAZ BIN HUSIEN",
+                    "MUHAMMAD AMMAR AZFAR BIN MOHD AZLYMI",
+                    "MUHAMMAD AMSYAR BIN MUHAMAD ADHA",
+                    "MUHAMMAD ASYRAF BIN MUHAMMAD IQBAL RAZZAK",
+                    "MUHAMMAD AZKA FARHAN BIN MOHD ADEY",
+                    "MUHAMMAD QAYYUM MIQAELL BIN NOOR MUHAMMAD",
+                    "NOOR AFIFAH SOFIA BINTI MOHAMAD ARIF",
+                    "NUR AMIRAH NABILAH BINTI ABDUL RAZAK",
+                    "NUR AWLIYA HUMAIRA BINTI MOHAMMAD AMMIRUL",
+                    "NUR DANIA DAHLIA BINTI MUHAMAD KHAIRIN",
+                    "NUR ELFIEYA IZZARA BINTI MUHAMMAD ALIF",
+                    "NUR HANI AMMARAH BINTI MOHD.FAIZAL",
+                    "QUSHAYYI BIN MUHAMAD SOBFIAN",
+                    "WAN NUR KASTURI RAISHA BINTI WAN MUHAMAD ADIFIKRI"
+                ],
+                "4 Kasturi": [
+                    "AARIZ FAYYADH BIN AZAMI",
+                    "ADAM SYAUQI BIN MUHAMMAD SYAFIQ",
+                    "AIMY NUR ZHAFIRA BINTI ROSMAN",
+                    "AINUL MARDHIAH BINTI MUSYAHADI",
+                    "ALHAQEEF BIN NURHAFIZDIN",
+                    "HAJIDAH BINTI MOHD FAIZAL",
+                    "MUHAMMAD AARIZ ARSYAD BIN SHAMSUL",
+                    "MUHAMMAD ADAM MIKHAIL BIN SHAH JAHAN",
+                    "MUHAMMAD AMIRUL HAZIQ BIN MUHAMMAD SYAWAL",
+                    "MUHAMMAD ARASY DAIYAN BIN KAMARUL NIZAM",
+                    "MUHAMMAD ASYRAF IMAN BIN MOHD AYUB",
+                    "MUHAMMAD AYDEN HILFIY BIN MOHD AFFENDIE",
+                    "MUHAMMAD FIRAS AMSYAR BIN MOHAMMAD SHAZWAN",
+                    "MUHAMMAD FIRDAUS BIN SAEWARI",
+                    "MUHAMMAD KHAIR RIZQI BIN MOHD FAUZI",
+                    "NIK NUR AISYAH AZ-ZAHRA BINTI MAZLAN",
+                    "NUR AAIRA BASHIRAH BINTI IRWAN",
+                    "NUR HANNA HUMAIRAH BINTI MUHAMMAD HAMIZAN",
+                    "NUR IRENE FITIYA BINTI MUHAMMAD FARIZA",
+                    "NUR SAFIYYA RAIHANA BINTI MUHAMAD FAHIZUL",
+                    "NUR SHAZIA RAFIFAH BINTI MOHD FITRI",
+                    "NURHANA MARISSA BINTI MUHAMAD SHAHIDAN",
+                    "PUTERI AYRA NISRINA BINTI MOHAMAD RASHIDI",
+                    "QASEH MARISSA ADAWIYAH BINTI MARZUKI",
+                    "UMAR MUEEZ BIN SAMSUL",
+                    "WAN NUH BIN WAN AHMAD RAFIUDDIN"
+                ],
+                "4 Kamelia": [
+                    "AYLEEN ADILAH BINTI MUHAMMAD AIZAD",
+                    "HANA AATHIRAH BINTI MOHD RIZAL",
+                    "HANNAN SAFIYYA BINTI SHARULDIN",
+                    "KHAYRA FAYYOLA BINTI HASSAN ARASAN",
+                    "MUHAMAD AMIRUL FIRDAUS BIN MOHD JEFFRY",
+                    "MUHAMMAD ADAM DANIAL BIN IBRAM",
+                    "MUHAMMAD AQIL NAUFAL BIN MOHD EBBY JEFRI",
+                    "MUHAMMAD FARHAN HAFIZ BIN MOHAMED ALI",
+                    "MUHAMMAD HAZIQ IQBAL BIN ABDUL KARIM",
+                    "MUHAMMAD IRFAN BIN MOHAMAD HAFIS",
+                    "MUHAMMAD SYAHMI AFHAM BIN MUHAMAD SARIZAM",
+                    "NOR QASEH DAMIA BINTI AZUAR SHAH",
+                    "NUR AMALIA NERISSA BINTI MD ASYRUL NIZAM",
+                    "NUR ARIANA DAMIA BINTI MOHAMAD ZULKARNAIN",
+                    "NUR KHAYLA AUNI BINTI MOHD SANI",
+                    "NUR NAJMA ZAHRA BINTI ISHAK",
+                    "NURUL IMAN BINTI SAPRI",
+                    "RAJA ADRIAN SYAH BIN RAJA SAMSUDIN",
+                    "SITI ALWIYAH SAFFIRA BINTI ABDULLAH",
+                    "SYAZARIL SHAQUAN BIN FAIRIZ"
+                ],
+                "4 Kekwa": [
+                    "AREEZ RASYDAN BIN ABDULLAH",
+                    "CHE MUAZ AL-FATTEH SYAH BIN CHE MAHMOD",
+                    "LYDIYA NOR UMAIRAH BINTI ZULKIPLI",
+                    "MOHAMMAD RAFFIEZAL BIN MOHD FADZLIE",
+                    "MUHAMAD FIRAS RIDZUAN BIN NORAZWAN",
+                    "MUHAMMAD AMMAR HAKIM BIN MAZELANI",
+                    "MUHAMMAD AQIL BIN MOHD SHAFIZAN",
+                    "MUHAMMAD ASHRAF ARYAN BIN ABDUL RAHMAN",
+                    "MUHAMMAD IMAN FIRDAUS BIN MOHD YUSYAZUAN",
+                    "MUHAMMAD SYAKIR NADHIF BIN ABDULLAH",
+                    "MUHAMMAD ZILL QAYYIM BIN MUHAMMAD SHAUFFUAN",
+                    "MUHAMMAD ZULHUZAIMIE BIN ABDUL HAFIZ",
+                    "NABIESYAH BINTI ABDULLAH",
+                    "NOR ADRIAN RAYQAL BIN NOR ASMAWI",
+                    "NOR IHSAN BIN ABDUL AZIZ",
+                    "NUR AAIRA SOFEA BINTI MUHAMMAD ZUL FIQQRY",
+                    "NUR AFIQAH SYAHIRAH BINTI MOHD SAHI",
+                    "NUR ALISHA ADRIANA BINTI MUHAMMAD SOBIRIN",
+                    "NUR AZALEA KHALIIQAH BINTI ABDULLAH",
+                    "NUR BATRISYA HAIRUL LIZAM BINTI ABDULLAH",
+                    "NUR FARAH SYAHIDAH BINTI DILBAR KHAN",
+                    "NUR INSYIRAH AISYAH BINTI MOHD KHAIRI",
+                    "NUR QASEH MEDINA BINTI MOHD ERWAN FALIMIE",
+                    "NURFARISHA SOFEA BINTI ABDULLAH",
+                    "RAZIQ AHNAN BIN NASZEHAN",
+                    "SITI ALWIYAH SAFFURA BINTI ABDULLAH",
+                    "SITI NUR HAWA IMANI BINTI ABDULLAH",
+                    "WAN NUR HIDAYAH BINTI WAN MOHD AFZAINIZAM"
+                ]
+            },
+            "Tahun 5": {
+                "5 Kenanga": [
+                    "'AMMAR FAWWAZ BIN MOHD TAUFIK",
+                    "AHMAD ANIQ RAZIN ADHA BIN ADNAN",
+                    "AHMAD AQIFF MUHAIMIN BIN AHMAD",
+                    "AHMAD DZUL RAHMAN BIN ZULY RAHIMIE",
+                    "AIRIN SOFEA BINTI AZMI",
+                    "AIRIS SOFYA BINTI MOHD SHAIFUL LIZAN",
+                    "AISH RAIHAN NAZMI BIN SHAARI",
+                    "ANIS ZHAFIRA BINTI KHAIRUL NIZAM",
+                    "ARIF FAHMI BIN SAIFULLIZAN",
+                    "BADRINA BATRISYAH QAISARA BINTI IBRAM",
+                    "ELMAN HAZIZ BIN EZLYSHAH",
+                    "KHALISAH AMIRAH BINTI MOHAMAD HELMY",
+                    "LUQMAN HAIKAL BIN ABDUL SYUKUR",
+                    "MUHAMMAD ADAM HARRIS BIN ABDUL 'AZIM",
+                    "MUHAMMAD AMAR FATEH BIN MOHD FIRDAUS",
+                    "MUHAMMAD AMMAR BIN MUHAMAD ADHA",
+                    "MUHAMMAD ASHRAFFY LUFFY BIN MAHADI",
+                    "MUHAMMAD AWWAL FITRI BIN ABDULLAH",
+                    "MUHAMMAD AZWAR SYAZWI BIN MUHAMMAD ASNAWI SAFFUAN",
+                    "MUHAMMAD FIRDAUS BIN MOHAMAD FAZZIL",
+                    "NAYLA BINTI MOHD ZAMRI",
+                    "NOOR MUHAMMAD AZFAR BIN NOOR AZIZAN",
+                    "NUR AFINA NATASHA BINTI BORAHAM",
+                    "NUR AMILI INSYIRAH BINTI MOHD KHAIRUL ISZAT",
+                    "NUR AMNAH AMNIYAH BINTI TANSAIDI",
+                    "NUR DINI NADHIRA BINTI MOHAMMAD SHAHRIL",
+                    "NUR JANNAH ALEEYSHA BINTI HERMAN SUSILA",
+                    "NUR NAILAH KHADEEJA BINTI MOHD AZHAR",
+                    "NURAISHA ALIFA BINTI MOHD RIDI",
+                    "NURTASNEEM SAFIAH BINTI ABD MUTALIB",
+                    "PUTERA RAYYAN IRFAN BIN MOHAMAD MUSTAKIM",
+                    "PUTERI NUR ZAFIRAH BINTI MEGAT FADHLI",
+                    "RAJA AYYASH BIN RAJA SHAHNIZAM",
+                    "WAN SUCI ARIQA FARISA BINTI WAN FAKRUL AZIZ"
+                ],
+                "5 Kasturi": [
+                    "BATRISYA ERYNA BINTI AZLAN",
+                    "CHE NUR SYAFINA BINTI MOHD HAFIZUL",
+                    "KEISHA BINTI MOHD ZAMRI",
+                    "MIQAIL ISKANDAR BIN DZULKARNAIN",
+                    "MUHAMMAD AFIQ HAZUAN BIN MOHD AMIN",
+                    "MUHAMMAD AISY AQEEL BIN PAIZUL HAQIMY",
+                    "MUHAMMAD AKIF AMZAR BIN KHAIRUL FADZLI",
+                    "MUHAMMAD JAFAR SAFWAN BIN JAMAL",
+                    "MUHAMMAD KAMAL ZARIFF BIN KAMARUL AZHAR",
+                    "MUHAMMAD KHALAF HIBATULLAH BIN MASWAN",
+                    "MUHAMMAD NASIR RAFLI BIN RAZLAN",
+                    "MUHAMMAD UWAIS FAKHRULLAH BIN HASHAMIZI",
+                    "MUHAMMAD ZAFFRIL RAYYKAL BIN ABDUL SYAHID",
+                    "NUR AISYA SOFEA BINTI AHMAD AZWAN",
+                    "NUR AQILAH BINTI MOHD ASRI",
+                    "NUR HANA KHAIRUNNISA BINTI MOHD RAFI",
+                    "NUR INARA AUNI BINTI MOHAMAD HAIROL",
+                    "NUR KHAIRIYAH BINTI KASMANIA AKIL",
+                    "NUR KHAYLA AMANDA BINTI MOHAMMAD SARIZAN",
+                    "NUR MARDHIYAH NAFEESA BINTI MOHD MAULUD",
+                    "NUR MUMTAZ UMAIRAH BINTI NIZARKAN",
+                    "NUR SYIFA RAU'AH BINTI MOHD FITRI",
+                    "NUR ZAHRA AISYAH BINTI MOHD AZHARUL ABIDIN",
+                    "NURUL FATIMA BINTI AZIZ",
+                    "NURUL HANI BINTI AZIZ",
+                    "NURUL SYAQILA AQILAH BINTI BAHARUDDIN",
+                    "QASEH MEDINA AISYA BINTI MARZUKI",
+                    "RAISHA MALAEKA BINTI KHAIRUL ANUAR",
+                    "WAN IBRAHIM RIFQI BIN WAN MOHD SHAHID"
+                ],
+                "5 Kamelia": [
+                    "AHMAD ADAM DANIAL BIN AHMAD NOOR AZLAN",
+                    "AHMAD ALEEF ZIQRIE BIN AFIFI DZIAHUDDIN",
+                    "AHMAD DANIYAL RIZQI BIN RUSYDI",
+                    "AINUR HAWA ELISA BINTI JAMALUDIN",
+                    "ALYA AFSHA DANIA BINTI HASMUNI",
+                    "ARYAN LUTHFI BIN MUHAMMAD HAFIZI",
+                    "IMAN BUQHARI BIN MOHARI",
+                    "LUTH MALIQ BIN JAMADI",
+                    "MUHAMAD UMAR HADIF BIN SAIFUL HIZAM",
+                    "MUHAMMAD ADAM DARWISH BIN WAN MOHD ABDUL HAFIZ",
+                    "MUHAMMAD AIDIL FARID BIN NASIRUDDIN",
+                    "MUHAMMAD AISH RASYDAN BIN ABDULLAH",
+                    "MUHAMMAD ARYAN WAFI BIN ARWAN",
+                    "MUHAMMAD DARWISH BIN ADDY IZWAN",
+                    "MUHAMMAD FAAREQ HELMI BIN MUHAMMAD WAHHIDIN",
+                    "MUHAMMAD KAMIL IMAN BIN PAIZAL",
+                    "MUHAMMAD SYAHEED NASREE BIN RUHAIZI",
+                    "MUHAMMAD WAFIQ ZAFRAN BIN ABDUL RAHIM",
+                    "MUHAMMAD ZAFRAN BIN MOHD HAFIF",
+                    "NUH FAIZ ADLI BIN BUHARI",
+                    "NUR HAIRINA QAISARA BINTI HAIRULIZZHAN",
+                    "NUR HIDAYAH BINTI HENDRY",
+                    "NUR QASRINA BINTI MUHAMMAD ERWAN",
+                    "NURIMAN NIA AL-JANNAH BINTI MUHAMAD HASBULLAH",
+                    "NURUL AYRA ADEENA BINTI KHAIRUL NIZAM",
+                    "PUTRA INDRA BIN MUHAMAD FAHIZAL",
+                    "SYAMIL SYAKIRIN BIN MOHD FAUZI"
+                ]
+            },
+            "Tahun 6": {
+                "6 Kenanga": [
+                    "ABDULLAH NASIH 'ULWAN BIN AHMAD MUZAKKIR",
+                    "AFFAN SYAHMI BIN MOHD NAZRI",
+                    "AISYAH BINTI RUSDY",
+                    "AKEF HAYYAN BIN SHAHRIL",
+                    "AMNA ZARA BINTI MOHD SHAROL RAZIV",
+                    "AMNI FITRISYA BINTI CHE MUD",
+                    "DANISH AZIQ SHAH BIN AZID",
+                    "HAZIQ IRHAM BIN ASMADI FUAD",
+                    "IMAN AWLIYAA' BINTI MOHD IDWAN",
+                    "KHAIRATUL NURJANNAH BINTI KHAIRUL ZAMNOOR",
+                    "LUTH THAQIF AREEQ BIN MOHD.ASMAWI",
+                    "MOHAMAD RAYYAN MIKHAEL BIN MOHAMAD SAIFFUL",
+                    "MUHAMMAD ADWA IKHWAN BIN MOHD KHAIRUL ISZAT",
+                    "MUHAMMAD DANISH NAUFAL BIN MOHAMAD",
+                    "MUHAMMAD HAFIZ BIN MOHAMMAD SHAHIDI",
+                    "MUHAMMAD SHHAFIQ RIZAL BIN ABD RAZAK",
+                    "NOR ALYA MAISARA BINTI ZULKIPLI",
+                    "NUR AMANINA BINTI MOHAMAD HAFIS",
+                    "NUR DAMIA KHALISAH BINTI MAHDHORY",
+                    "NUR HANA INSYIRAH BINTI ROSMAN",
+                    "NUR KHALISH HANA",
+                    "NUR NAJWA HUDA BINTI ZULHAIDI",
+                    "NUR QISYA RANIA BINTI MOHD SAIFUL FITRI",
+                    "NUR ZIARAH AZWA BINTI YAMRIH",
+                    "NURFAQIHAH AMANI BINTI MOHD ARMIZI",
+                    "NURUL AISYAH BINTI AZIZAN",
+                    "PUTERI AYUNI RAIHANA BINTI MEOR HAZRUL EFFENDY",
+                    "PUTERI DHIYA AMANDA BINTI MOHAMAD RASHIDI",
+                    "PUTERI NUR AIRIS AMANDA BINTI MOHD NUBAIRI",
+                    "RAJA MUHAMMAD HAZIQ DZAKWAN BIN RAJA MOHD SAMSUDIN",
+                    "SALSABILA BINTI ABDESLAM OUAKRIM",
+                    "SITI NUR HIDAYAH BINTI MOHD TAWFEK",
+                    "SITI ZUHAIRAH BINTI ZULKEFLI",
+                    "SOFEA MALAEKA BINTI NORFADLI",
+                    "WAN FARAH SYAFIKA BINTI WAN YAHAYA"
+                ],
+                "6 Kasturi": [
+                    "AINAA NADHIRAH BINTI MOHD KHAIRI",
+                    "AINUR QEYRA IZZATTI BINTI NOOR MUHAMMAD",
+                    "ARYANA AISYAH BINTI KHAIRUL RAZI",
+                    "BADRUL BADRISYAH QUSYAIRY BIN IBRAM",
+                    "DHIA AFRINA BINTI MOHD FAZRUL",
+                    "IZZ'ZARA AISYAH BINTI MUHAMMAD FAATHIR",
+                    "KHAYLA ARISSA BINTI AHMAD KHUDRI",
+                    "MIASARAH INSYIRAH BINTI FARID ISMAIL",
+                    "MUHAMMAD ADAM MUSLIM BIN MUHAMMAD KHAIRUL SYAFIQ",
+                    "MUHAMMAD ALEEF AZFAR BIN SUDIR SYAHRIN",
+                    "MUHAMMAD AMMAR HARRAZ BIN MD SYARHAN",
+                    "MUHAMMAD ANAQI AL-UQASHAH BIN MOHAMAD RAFI AL-HAFIS",
+                    "MUHAMMAD ILHAM MIRZA BIN MUHAMMAD HAFFIZI",
+                    "MUHAMMAD KHALIS SYAKIRIN BIN MOHD SANUSI",
+                    "MUHAMMAD NAIM MUHAIMIN BIN ABDUL RAHIM",
+                    "MUHAMMAD RAFIQ BIN RAZALI",
+                    "MUHAMMAD RIZQI DAYYAN BIN RANDY",
+                    "MUHAMMAD SYAMMIL FARHAN BIN SYAHRUL AMBIA",
+                    "MUHAMMAD UMMAR LUQMAN BIN MOHAMAD KHAIRIL",
+                    "MUHAMMAD WAFIY RAYQAL BIN MOHD NIZAM",
+                    "NUR AALIYAH HUMYRAH BINTI MUHAMMAD SYUKOR",
+                    "NUR ADRIANA FARISHA DAMIA BINTI HAFIZULLAH",
+                    "NUR AIRA MARISSA BINTI LUQMAN AL-HAKIM",
+                    "NUR AMIRAH UMAIRAH BINTI ABDULLAH",
+                    "NUR DAMIA MELISSA BINTI MD ASYRUL NIZAM",
+                    "NUR HANA HAZIRAH BINTI ZULKIFLY",
+                    "NUR KHALESYA SOFIYYA BINTI MOHD HAFIZI",
+                    "NUR NABILAH BINTI MUHAMAD",
+                    "NUR QASSEH HUMAIRA BINTI MOHD MAULUD",
+                    "NUR RANIA NAFEESA BINTI A RAMLE",
+                    "NURIN SALSABILA HUSNA BINTI ROSMADI",
+                    "NURUL AEYSYA AQEELA BINTI PAIZUL HAQIMY",
+                    "UMUL UMAIRRAH BINTI NADZRI"
+                ],
+                "6 Kamelia": [
+                    "ADAM HAMIZAN RAZZAK BIN MUHAMMAD IQBAL RAZZAK",
+                    "AISY RIZQI SHAH ZAMILI BIN ABDULLAH",
+                    "AMMAR FIRAS BIN AZAMI",
+                    "FARRA RANIA BINTI ABDUL HISHAM",
+                    "IRFAN AMSYAR BIN MOHD KHAIRI",
+                    "MOHAMAD ANAQIE MIKHAIL BIN MOHAMAD ZAWAWI",
+                    "MUHAMAD ADAM NAUFAL BIN MOHAMAD ZULKARNAIN",
+                    "MUHAMAD NAUFAL SHAFIQ BIN MOHAMAD SHAHRIZAM",
+                    "MUHAMMAD ADAM HAIKAL BIN MUHAMMAD SUHAIMI",
+                    "MUHAMMAD ADAM MUKHRIZ BIN MOHD ZAKI",
+                    "MUHAMMAD ADAM RYQAL BIN ABDUL QAYYUM",
+                    "MUHAMMAD DANIAL RIZQI BIN MOHD SYAMIL",
+                    "MUHAMMAD FAYYAD LUTFI BIN ABDULLAH",
+                    "MUHAMMAD NIZAM BIN SULAIMAN",
+                    "MUHAMMAD RAQIB DAIYAN BIN MOHAMMAD ZULRAIMI",
+                    "MUHAMMAD SHAREEZ AMMAR BIN MOHD SHAHROL RIZAM",
+                    "NOR AMIRAH",
+                    "NORSAFIKA BINTI ABDULLAH",
+                    "NUR AZYATI BINTI MOHD KHAIRUL ARIFIN",
+                    "PUTERI NISYHA BINTI ABDULLAH",
+                    "QHAISA MIA IZZARA BINTI MOHD KHAIRIR",
+                    "WAN MUHAMMAD LUTHFI BIN WAN MOHD SHAHID"
+                ]
+            }
+        };
+
+        const STANDARDS_DATA = {
+            "Tahun 4": {
+                "Al-Quran": [
+                    "1.1.1 Membaca Surah Al-Takathur dengan betul dan bertajwid",
+                    "1.1.2 Membaca Surah Al-Takathur dan mengamalkannya dalam kehidupan harian secara beradab dan istiqamah",
+                    "1.2.1 Membaca Surah Al-Qariah dengan betul dan bertajwid",
+                    "1.2.2 Membaca Surah Al-Qariah dan mengamalkannya dalam kehidupan harian secara beradab dan istiqamah",
+                    "1.3.1 Menghafaz Surah Al-Takathur dengan betul",
+                    "1.3.2 Mengahafaz Surah Al-Takathur dengan betul dan bertajwid",
+                    "1.3.3 Mengamalkan hafazan Surah Al-Takathur dalam solat dan kehidupan harian secara beradab dan istiqamah",
+                    "1.4.1 Menghafaz surah Al-Qariah dengan betul",
+                    "1.4.2 Menghafaz surah Al-Qariah dengan betul dan bertajwid",
+                    "1.4.3 Mengamalkan hafazan surah Al-Qariah dalam solat dan kehidupan harian secara beradab and istiqamah",
+                    "1.5.1 Menyatakan pengenalan surah Al-Ikhlas",
+                    "1.5.2 Menjelaskan tuntutan ayat berdasarkan terjemahan surah Al-Ikhlas",
+                    "1.5.3 Menganalisis kepentingan dan kelebihan mengamalkan surah Al-Ikhlas serta tuntutannya dalam bentuk keperibadian",
+                    "1.5.4 Mengamalkan tuntutan surah Al-Ikhlas dalam kehidupan secara beradab dan istiqamah",
+                    "1.6.1 Mengenalpasti kalimah dan potongan ayat yang mengandungi bacaan izhar syafawi, ikhfa’ syafawi dan idgham mithlain dengan betul",
+                    "1.6.2 Membaca kalimah dan potongan ayat yang mengandungi bacaan izhar syafawi, ikhfa’ syafawi dan idgham mithlain dengan betul dan bertajwid",
+                    "1.6.3 Mengaplikasikan bacaan izhar syafawi, ikhfa’ syafawi dan idgham mithlain dengan betul dan bertajwid",
+                    "1.6.4 Mengamalkan bacaan Al-Quran dengan betul dan bertajwid dalam kehidupan secara beradab dan istiqamah",
+                    "1.7.1 Mengenalpasti kalimah dan potongan ayat yang mengandungi bacaan qalqalah dengan betul",
+                    "1.7.2 Membaca kalimah dan potongan ayat yang mengandungi bacaan qalqalah dengan betul dan bertajwid",
+                    "1.7.3 Mengaplikasikan bacaan qalqalah dengan betul dan bertajwid",
+                    "1.7.4 Mengamalkan bacaan Al-Quran dengan betul dan bertajwid dalam kehidupan secara beradab dan istiqamah",
+                    "1.8.1 Mengenalpasti kalimah dan potongan ayat yang mengandungi tanda waqaf dengan betul",
+                    "1.8.2 Membaca kalimah dan potongan ayat yang mengandungi tanda waqaf dengan betul dan bertajwid",
+                    "1.8.3 Mengaplikasikan tanda waqaf dengan betul dan bertajwid dalam pembacaan Al-Quran secara beradab dan istiqamah"
+                ],
+                "Hadis": [
+                    "2.1.1 Menyatakan tuntutan hadis berdasarkan bacaan dan terjemahannya",
+                    "2.1.2 Menyatakan maksud tetamu",
+                    "2.1.3 Mengaplikasikan adab memuliakan tetamu",
+                    "2.1.4 Menganalisis kepentingan memuliakan tetamu",
+                    "2.1.5 Mengamalkan dan menghayati tuntutan hadis dalam kehidupan secara beradab dan istiqamah"
+                ],
+                "Aqidah": [
+                    "3.1.1 Menyatakan pengertian nama Allah Al-Azim dan Al-Hamid",
+                    "3.1.2 Menerangkan hukum beriman dengan nama Allah Al-Azim dan Al-Hamid berdasarkan dalil naqli serta terjemahannya",
+                    "3.1.3 Menganalisis kepentingan beriman dengan nama Allah Al-Azim dan Al-Hamid",
+                    "3.1.4 Membuktikan keimanan terhadap nama Allah Al-Azim dan Al-Hamid melalui Tindakan",
+                    "3.1.5 Mengagungi kebesaran Allah dan mensyukuri nikmatnya dalam kehidupan secara beradab dan istiqamah",
+                    "3.2.1 Menyatakan pengertian nabi dan rasul",
+                    "3.2.2 Menerangkan hukum beriman dengan rasul berdasarkan dalil naqli serta terjemahannya",
+                    "3.2.3 Menyenaraikan 25 nama rasul",
+                    "3.2.4 Menjelaskan peranan rasul",
+                    "3.2.5 Menganalisis kepentingan beriman kepada rasul",
+                    "3.2.6 Membuktikan keimanan kepada rasul melalui Tindakan",
+                    "3.2.7 Menjadikan Rasulullah sebagai ikutan dalam kehidupan secara beradab dan istiqamah",
+                    "3.3.1 Menyatakan maksud kufur",
+                    "3.3.2 Menerangkan hukum kufur berdasarkan dalil naqli serta terjemahannya",
+                    "3.3.3 Menjelaskan bahagian2 kufur dan perkara2 yang boleh menyebabkannya",
+                    "3.3.4 Menganalisis kesan kufur dalam kehidupan",
+                    "3.3.5 Merumus tindakan menjauhi kufur",
+                    "3.3.6 Mengelakkan perbuatan yang boleh membawa kepada kufur dalam kehidupan secara beradab dan istiqamah",
+                    "3.4.1 Menyatakan maksud nifaq",
+                    "3.4.2 Menerangkan hukum nifaq berdasarkan dalil naqli serta terjemahannya",
+                    "3.4.3 Menjelaskan bahagian2 nifaq dan perkara2 yang boleh menyebabkannya",
+                    "3.4.4 Menganalisis kesan nifaq dalam kehidupan",
+                    "3.4.5 Merumus tindakan menjauhi nifaq",
+                    "3.4.6 Mengelakkan perbuatan nifaq dalam kehidupan secara beradab dan istiqamah"
+                ],
+                "Ibadah": [
+                    "4.1.1 Menerangkan pengertian najis",
+                    "4.1.2 Menjelaskan bahagian najis dan jenis najis serta cara menyucikannya",
+                    "4.1.3 Mengaplikasikan cara2 bersuci daripada najis mukhaffafah, mutawasitah, dan mughallazah dengan betul",
+                    "4.1.4 Menghuraikan kepentingan bersuci dalam kehidupan harian",
+                    "4.1.5 Menjaga kebersihan dan kesucian dalam semua aspek kehidupan secara beradab dan istiqamah",
+                    "4.2.1 Menyatakan maksud azan dan iqamat",
+                    "4.2.2 Membaca dan menghafaz lafaz azan dan iqamat serta jawabnya",
+                    "4.2.3 Memperdengarkan azan dan iqamat dengan cara yang betul",
+                    "4.2.4 Memperincikan adab sebelum, semasa dan selepas azan dan iqamat",
+                    "4.2.5 Menghuraikan kepentingan azan dan iqamat",
+                    "4.2.6 Menghormati azan dan iqamat serta bersegera menunaikan solat berjemaah secara beradab dan istiqamah",
+                    "4.3.1 Menyatakan maksud puasa ramadan",
+                    "4.3.2 Menerangkan hukum puasa ramadan berdasarkan dalil naqli serta terjemahannya",
+                    "4.3.3 Menjelaskan syarat2 wajib, syarat2 sah dan rukum puasa ramadan",
+                    "4.3.4 Menghuraikan sunat2 puasa ramadan",
+                    "4.3.5 Menganalisis perkara2 yang membatalkan puasa ramadan",
+                    "4.3.6 Merumus kepentingan puasa ramadan melaksanakan ibadah puasa ramadan secara beradab dan istiqamah"
+                ],
+                "Sirah": [
+                    "5.1.1 Menyatakan latar belakang masyarakat Yathrib sehingga termeterai perjanjian aqabah pertama dan kedua",
+                    "5.1.2 Menjelaskan isi perjanjian aqabah pertama dan perjanjian aqabah kedua",
+                    "5.1.3 Menganalisis kepentingan perjanjian aqabah pertama dan perjanjian aqabah kedua",
+                    "5.1.4 Merumus iktibar daripada penerimaan masyarakat Yathrib terhadap dakwah Nabi Muhammad melalui perjanjian aqabah pertama dan kedua",
+                    "5.1.5 Mematuhi peraturan yang telah ditetapkan demi kesejahteraan hidup",
+                    "5.2.1 Menyatakan maksud sifat fatanah Nabi Muhammad",
+                    "5.2.2 Menjelaskan keunggulan sifat fatanah Nabi Muhammad melalui kisah kehidupan baginda",
+                    "5.2.3 Mengaplikasikan tindakan Nabi Muhammad yang bersifat fatanah dalam kehidupan harian sebagai bukti kecintaan kepada baginda",
+                    "5.2.4 Merumus tindakan Nabi Muhammad yang bersifat fatanah dan mengamalkannya",
+                    "5.2.5 Bijaksana dalam setiap tindakan secara beradab dan istiqamah",
+                    "5.3.1 Menyatakan maksud dakwah",
+                    "5.3.2 Menjelaskan cara Nabi Muhammad berdakwah",
+                    "5.3.3 Menghuraikan penentangan terhadap Nabi Muhammad ketika berdakwah",
+                    "5.3.4 Mengaplikasi keperibadian Nabi Muhammad dalam berdakwah dan menghadapi penentangan",
+                    "5.3.5 Merumus keperibadian Nabi Muhammad dalam berdakwah dan mengamalkannya",
+                    "5.3.6 Mencontohi keperibadian dan tindakan Rasulullah dalam berdakwah secara beradab dan istiqamah"
+                ],
+                "Adab": [
+                    "6.1.1 Menyatakan maksud dan hukum menutup aurat",
+                    "6.1.2 Menerangkan hukum menutup aurat berdasarkan dalil naqli serta terjemahannya",
+                    "6.1.3 Menjelaskan adab dan ciri2 berpakaian yang menepati syarak",
+                    "6.1.4 Menghafaz doa berpakaian dan mengamalkannya",
+                    "6.1.5 Mengaplikasi adab berpakaian yang menepati syarak",
+                    "6.1.6 merumus adab berpakaian yang menepati syarak",
+                    "6.1.7 Menjaga adab berpakaian dengan mencontohi sunnah Rasulullah dalam kehidupan secara beadab dan istiqamah",
+                    "6.2.1 Menyatakan maksud riadah",
+                    "6.2.2 Menerangkan hukum beriadah berdasarkan dalil naqli serta terjemahannya",
+                    "6.2.3 Menjelaskan adab beriadah yang menepati syarak",
+                    "6.2.4 Mengaplikasi adab beriadah yang menepati syarak",
+                    "6.2.5 Menganalisis kepentingan adab beriadah yang menepati syarak",
+                    "6.2.6 Merumus adab beriadah yang menepati sunnah Rasulullah",
+                    "6.2.7 Menjaga adab beriadah dengan mencontohi sunnah Rasulullah dalam kehidupan secara beradab dan istiqamah",
+                    "6.3.1 Menyatakan maksud jiran",
+                    "6.3.2 Menerangkan hukum beradab terhadap jiran berdasarkan dalil naqli serta terjemahannya",
+                    "6.3.3 Menjelaskan hak2 jiran",
+                    "6.3.4 Mengaplikasi adab berjiran yang menepati syarak",
+                    "6.3.5 Menganalisis kepentingan adab berjiran yang menepati syarak",
+                    "6.3.6 Merumus adab berjiran yang menepati sunnah Rasulullah",
+                    "6.3.7 Memelihara adab berjiran dengan mencontohi Rasulullah dalam kehidupan secara beradab dan istiqamah",
+                    "6.4.1 Menyatakan maksud guru",
+                    "6.4.2 Menerangkan hukum beradab terhadap guru berdasarkan dalil naqli serta terjemahannya",
+                    "6.4.3 Menjelaskan adab terhadap guru",
+                    "6.4.4 Mengaplikasi adab terhadap guru",
+                    "6.4.5 Menganalisis kepentingan beradab terhadap guru",
+                    "6.4.6 Merumus adab terhadap guru",
+                    "6.4.7 Sentiasa menghormati guru dengan mencontohi akhlak Rasulullah dalam kehidupan secara beradab dan istiqamah"
+                ],
+                "Jawi": [
+                    "7.1.1 Mengenal kedudukan huruf hamzah dalam perkataan dengan betul",
+                    "7.1.2 Membaca perkataan yang mengandungi huruf hamzah dengan betul",
+                    "7.1.3 Menulis perkataan yang mengandungi huruf hamzah dengan betul",
+                    "7.1.4 Mencintai tulisan jawi sebagai warisan budaya bangsa",
+                    "7.2.1 Mengenal peraktaan tradisi dengan betul",
+                    "7.2.2 Membaca perkataan tradisi dengan betul",
+                    "7.2.3 Menulis perkataan tradisi dengan betul",
+                    "7.2.4 Menulis ayat yang mengandungi perkataan tradisi dengan betul",
+                    "7.2.5 Mencintai tulisan jawi sebagai warisan budaya bangsa",
+                    "7.3.1 Mengenal perkataan pinjaman bahasa inggeris dengan betul",
+                    "7.3.2 Membaca perkataan pinjaman bahasa inggeris dengan betul",
+                    "7.3.3 Menulis perkataan pinjaman bahasa inggeris dengan betul",
+                    "7.3.4 Menulis ayat yang mengandungi perkataan pinjaman bahasa inggeris dengan betul",
+                    "7.3.5 Mencintai tulisan jawi sebagai warisan budaya bangsa",
+                    "7.4.1 Mengenal perkataan pinjaman bahasa arab dengan betul",
+                    "7.4.2 Membaca perkataan pinjaman bahasa arab dengan betul",
+                    "7.4.3 Menulis perkataan pinjaman bahasa arab dengan betul",
+                    "7.4.4 Menulis ayat yang mengandungi perkataan pinjaman bahasa arab dengan betul",
+                    "7.4.5 Mencintai tulisan jawi sebagai warisan budaya bangsa"
+                ]
+            },
+            "Tahun 5": {
+                "Al-Quran": [
+                    "1.1.1 Membaca Surah Al-Qadr dengan betul dan bertajwid",
+                    "1.1.2 Membaca Al-Quran dalam kehidupan harian secara beradab dan istiqamah",
+                    "1.2.1 Membaca Surah Al-Tin dengan betul dan bertajwid",
+                    "1.2.2 Membaca Al-Quran dalam kehidupan harian secara beradab dan istiqamah",
+                    "1.3.1 Menghafaz Surah Al-Qadr dengan betul dan bertajwid",
+                    "1.3.2 Membaca Al-Quran dalam kehidupan harian secara beradab dan istiqamah",
+                    "1.4.1 Menghafaz surah Al-Tin dengan betul dan bertajwid",
+                    "1.4.2 Membaca Al-Quran dalam kehidupan harian secara beradab dan istiqamah",
+                    "1.5.1 Menyatakan pengenalan surah Al-‘Asr",
+                    "1.5.2 Menjelaskan tuntutan surah Al-‘Asr",
+                    "1.5.3 Menganalisis kepentingan mengamalkan surah Al-‘Asr dan tuntutannya dalam membentuk keperibadian",
+                    "1.5.4 Menghayati tuntutan surah Al-‘Asr secara beradab dan istiqamah",
+                    "1.6.1 Membaca kalimah dan potongan ayat yang mengandungi bacaan mad silah qasirah, mad badal, mad ‘iwadh, mad tamkin dan mad tabi’ie diawal surah dengan betul dan bertajwid.",
+                    "1.6.2 Mengenalpasti kalimah dan potongan ayat yang mengandungi bacaan mad silah qasirah, mad badal, mad ‘iwadh, mad tamkin dan mad tabi’ie diawal surah dengan betul",
+                    "1.6.3 Mengaplikasikan bacaan mad silah qasirah, mad badal, mad ‘iwadh, mad tamkin dan mad tabi’ie diawal surah dengan betul dan bertajwid dalam pembacaan Al-Quran",
+                    "1.6.4 Membaca Al-Quran dengan bertajwid dalam kehidupan harian secara beradab dan istiqamah"
+                ],
+                "Hadis": [
+                    "2.1.1 Menyatakan tuntutan hadis berdasarkan bacaan dan terjemahannya",
+                    "2.1.2 Menyatakan maksud pemimpin",
+                    "2.1.3 Mengaplikasikan adab terhadap pemimpin",
+                    "2.1.4 Menganalisis kepentingan mentaati pemimpin",
+                    "2.1.5 Mengamal dan menghayati tuntutan hadis dalam kehidupan secara beradab dan istiqamah"
+                ],
+                "Aqidah": [
+                    "3.1.1 Menyatakan pengertian nama Allah Al-Malik dan Al-Hasib",
+                    "3.1.2 Menerangkan hukum beriman dengan nama Allah Al-Malik dan Al-Hasib berdasarkan dalil naqli",
+                    "3.1.3 Menganalisis kepentingan beriman dengan nama Allah Al-Malik dan Al-Hasib",
+                    "3.1.4 Membuktikan keimanan terhadap nama Allah Al-Malik dan Al-Hasib melalui tindakan secara beradab dan istiqamah",
+                    "3.2.1 Menyatakan pengertian hari akhirat",
+                    "3.2.2 Menjelaskan hukum beriman dengan hari akhirat berdasarkan dalil naqli",
+                    "3.2.3 Menerangkan nama lain bagi hari akhirat",
+                    "3.2.4 Menganalisis kepentingan beriman kepada hari Akhirat",
+                    "3.2.5 Membuktikan keimanan terhadap hari Akhirat",
+                    "3.3.1 Menyatakan maksud syirik",
+                    "3.3.2 Menerangkan hukum syirik berdasarkan dalil naqli",
+                    "3.3.3 Menjelaskan jenis dan perbuatan yang boleh menyebabkan syirik",
+                    "3.3.4 Menilai kesan syirik dalam kehidupan",
+                    "3.3.5 Menjauhi perbuatan yang boleh membawa kepada syirik dalam kehidupan",
+                    "3.4.1 Menyatakan maksud sihir",
+                    "3.4.2 Menerangkan hukum sihir berdasarkan dalil naqli serta terjemahannya",
+                    "3.4.3 Menjelaskan contoh perbuatan sihir",
+                    "3.4.4 Menganalisis kesan perbuatan sihir dalam kehidupan",
+                    "3.4.5 Merumus tindakan menjauhi perbuatan sihir",
+                    "3.4.6 Menjauhi daripada melakukan perbuatan sihir dalam kehidupan"
+                ],
+                "Ibadah": [
+                    "4.1.1 Menerangkan pengertian tayammum",
+                    "4.1.2 Menerangkan sebab2 yang mengharuskan tayammum",
+                    "4.1.3 Menjelaskan rukun dan sunat tayammum",
+                    "4.1.4 Menghuraikan syarat2 tayammum",
+                    "4.1.5 Mengaplikasi cara2 tayammum",
+                    "4.1.6 Memperincikan perkara2 yang membatalkan tayammum",
+                    "4.1.7 Merumus kepentingan tayammum",
+                    "4.1.8 Menjaga kebersihan dalam kehidupan secara beradab dan istiqamah",
+                    "4.2.1 Menyatakan maksud solat berjemaah",
+                    "4.2.2 Menerangkan kelebihan dan kepentingan solat berjemaah",
+                    "4.2.3 Menjelaskan syarat sah solat berjemaah",
+                    "4.2.4 Menganalisis tatacara solat berjemaah",
+                    "4.2.5 Mengamalkan solat berjemaah secara beradab dan istiqamah",
+                    "4.3.1 Menyatakan maksud solat jumaat",
+                    "4.3.2 Menerangkan dalil naqli wajib solat jumaat dan ertinya",
+                    "4.3.3 Membaca lafaz niat solat jumaat",
+                    "4.3.4 Menjelaskan syarat wajib dan syarat sah solat jumaat",
+                    "4.3.5 Menghuraikan amalan sunat sebelum solat jumaat",
+                    "4.3.6 Menganalisis perkara2 yang dilarang ketika mendengar khutbah jumaat",
+                    "4.3.7 Memperincikan hikmah solat jumaat",
+                    "4.3.8 Bersegera untuk menunaikan solat jumaat secara beradab",
+                    "4.4.1 Menyatakan maksud solat sunat dua hari raya dan hukumnya berdasarkan dalil naqli",
+                    "4.4.2 Menjelaskan kaifiat solat sunat dua hari raya",
+                    "4.4.3 Menganalisis amalan sunat sebelum dan selepas solat dua hari raya",
+                    "4.4.4 Memperincikan kepentingan solat sunat dua hari raya dan hikmah menunaikannya",
+                    "4.4.5 Menunaikan solat sunat dua hari raya secara beradab dan istiqamah"
+                ],
+                "Sirah": [
+                    "5.1.1 Menerangkan pengertian hijrah",
+                    "5.1.2 Menerangkan sebab yang mendorong hijrah ke madinah",
+                    "5.1.3 Menjelaskan peristiwa penting selepas Rasulullah menerima perintah hijrah ke madinah",
+                    "5.1.4 Menganalisis kepentingan peristiwa hijrah ke madinah",
+                    "5.1.5 Merumus iktibar daripada peristiwa hijrah ke Madinah",
+                    "5.1.6 Menjadikan Rasulullah sebagai contoh dalam melakukan perubahan secara beradab dan istiqamah",
+                    "5.2.1 Menyatakan maksud sifat itqan Nabi Muhammad",
+                    "5.2.2 Menjelaskan keunggulan sifat itqan Nabi Muhammad melalui kisah kehidupan baginda",
+                    "5.2.3 Mengaplikasikan tindakan Nabi Muhammad yang bersifat itqan sebagai bukti kecintaan kepada baginda dalam kehidupan harian",
+                    "5.2.4 Merumus iktibar daripada tindakan Nabi Muhammad yang bersifat itqan dan mengamalkannya",
+                    "5.2.5 Bersungguh-sungguh menyempurnakan tanggungjawab dalam kehidupan secara beradab dan istiqamah",
+                    "5.3.1 Menyatakan maksud pemimpin",
+                    "5.3.2 Menjelaskan ciri2 kepimpinan Nabi Muhammad",
+                    "5.3.3 Menganalisis peranan Nabi Muhammad sebagai seorang pemimpin",
+                    "5.3.4 Merumus iktibar keperibadian Nabi Muhammad sebagai pemimpin dan mengamalkannya",
+                    "5.3.5 Berusaha meneladani kepimpinan Rasulullah sebagai pemimpin unggul secara beradab dan istiqamah"
+                ],
+                "Adab": [
+                    "6.1.1 Menyatakan adab menaiki kenderaan",
+                    "6.1.2 Menghafaz doa menaiki kenderaan",
+                    "6.1.3 Mengaplikasi adab menaiki kenderaan dan mengamalkan langkah2 keselamatan",
+                    "6.1.4 Menganalisis kelebihan beradab menaiki kenderaan dan akibat mengabaikannya",
+                    "6.1.5 Merumus adab menaiki kenderaan",
+                    "6.1.6 Sentiasa mengamalkan adab menaiki kenderaan secara beradab dan istiqamah",
+                    "6.2.1 Menyatakan pengertian dan hukum jual beli berdasarkan dalil naqli",
+                    "6.2.2 Menerangkan adab berjual beli",
+                    "6.2.3 Mengaplikasi adab berjual beli",
+                    "6.2.4 Menganalisis kepentingan beradab ketika berjual beli",
+                    "6.2.5 Mengamalkan adab berjual beli yang menepati syarak secara beradab dan istiqamah",
+                    "6.3.1 Menyatakan maksud berkomunikasi",
+                    "6.3.2 Menyatakan hukum beradab ketika berkomunikasi berdasarkan dalil naqli",
+                    "6.3.3 Mengaplikasi adab berkomunikasi",
+                    "6.3.4 Menganalisis kepentingan beradab ketika berkomunikasi",
+                    "6.3.5 Mengamalkan adab berkomunikasi yang menepati syarak secara beradab dan istiqamah",
+                    "6.4.1 Menyatakan maksud alam sekitar",
+                    "6.4.2 Menerangkan hukum memelihara dan memulihara alam sekitar berdasarkan dalil naqli",
+                    "6.4.3 Mengaplikasi adab memelihara dan memulihara alam sekitar yang menepati syarak",
+                    "6.4.4 Menganalisis kepentingan memelihara dan memulihara alam sekitar yang menepati syarak",
+                    "6.4.5 Beratnggungjawab memelihara dan memulihara alam sekitar secara beradab dan istiqamah"
+                ],
+                "Jawi": [
+                    "7.1.1 Membaca teks berdasarkan tema: amalan hidup sihat, kebudayaan (etnik), perayaan, sukan, pakaian",
+                    "7.1.2 Membina dan menulis teks berdasarkan tema",
+                    "7.1.3 Membina, menulis dan membaca pelbagai jenis teks berdasarkan tema",
+                    "7.1.4 Melaksanakan aktiviti penulisan jawi pelbagai jenis tema diluar waktu pengajaran dan pembelajaran",
+                    "7.2.1 Mengenalpasti peralatan menulis khat",
+                    "7.2.2 Mengaplikasi cara mengguna peralatan khat dengan betul",
+                    "7.2.3 Menulis huruf mengikut kaedah khat nasakh",
+                    "7.2.4 Menulis perkataan mengikut kaedah khat nasakh",
+                    "7.2.5 Menulis ayat mudah mengikut kaedah khat nasakh",
+                    "7.2.6 Membudayakan aktiviti penulisan khat secara tekal"
+                ]
+            },
+            "Tahun 6": {
+                "Al-Quran": [
+                    "1.1.1	Membaca surah al-syarh dengan betul dan bertajwid",
+                    "1.1.2	Membaca al-Qur`an dalam kehidupan harian secara beradab dan istiqomah",
+                    "1.2.1	Membaca surah al-Dhuha dengan betul dan bertajwid",
+                    "1.2.2	Membaca al-Qur`an dalam kehidupan harian secara beradab dan istiqomah",
+                    "1.3.1	Menghafaz surah al-syarh dengan betul dan bertajwid",
+                    "1.3.2     Membaca al-Qur`an dalam kehidupan harian secara beradab dan istiqomah",
+                    "1.4.1	Menghafaz surah al-Dhuha dengan betul dan bertajwid",
+                    "1.4.2	Membaca al-Qur`an dalam kehidupan harian secara beradab dan istiqomah",
+                    "1.5.1	Menyatakan pengenalan surah al-Ma`un",
+                    "1.5.2	Menjelaskan tuntutan surah al-Ma`un",
+                    "1.5.3	Menganalisis kepentingan mengamalkan surah  al-Ma`un dan tuntutannya dalam membentuk Keperibadian",
+                    "1.5.4	Menghayati tuntutan surah al-Ma`un secara beradab dan istiqomah",
+                    "1.6.1	Membaca kalimah dan potongan ayat yang mengandungi bacaan mad lin dan mad a`rid Lisukun dengan betul dan bertajwid",
+                    "1.6.2	Mengenal pasti kalimah dan potongan ayat yang mengandungi bacaan mad lin dan mad A`rid Lisukun dengan betul",
+                    "1.6.3	Mengaplikasi bacaan mad lin dan mad A`rid Lisukun dengan betul dan bertajwid dalam Pembacaan al-Qur`an",
+                    "1.6.4	Membaca al-Qur`an dengan betul dan bertajwid dalam kehidupan harian secara beradab dan istiqomah",
+                    "1.7.1	Membaca kalimah dan potongan ayat yang mengandungi bacaan mad wajib Muttasil, mad Jaiz Munfasil dan Mad Silah Thowilah dengan betul dan bertajwid",
+                    "1.7.2	Mengenal pasti kalimah dan potongan ayat yang mengandungi bacaan mad wajib Muttasil, mad Jaiz Munfasil dan Mad Silah Thowilah dengan betul",
+                    "1.7.3	Mengaplikasi bacaan mad wajib Muttasil, mad Jaiz Munfasil dan Mad Silah Thowilah dengan betul dan bertajwid dalam Pembacaan al-Qur`an",
+                    "1.7.4	Membaca al-Qur`an dengan betul dan bertajwid dalam kehidupan harian secara beradab dan istiqomah",
+                    "1.8.1	Membaca kalimah dan potongan ayat yang mengandungi bacaan mad lazim harfi,mad lazim kalimi,dan mad farq dengan betul dan bertajwid",
+                    "1.8.2	Mengenal pasti kalimah dan potongan ayat yang mengandungi bacaan mad lazim harfi,mad lazim kalimi,dan mad farq dengan betul",
+                    "1.8.3	Mengaplikasi bacaan mad lazim harfi,mad lazim kalimi,dan mad farq dengan betul dan bertajwid dalam Pembacaan al-Qur`an",
+                    "1.8.4	Membaca al-Qur`an dengan betul dan bertajwid dalam kehidupan harian secara beradab dan istiqomah"
+                ],
+                "Hadis": [
+                    "2.1.1 Menyatakan tuntutan hadis menyayangi orang muda dan menghormati orang tua",
+                    "2.1.2 Menerangkan kepentingan berkasih sayang dalam masyarakat"
+                ],
+                "Aqidah": [
+                    "3.1.1 Menyatakan maksud nama Allah Al-Khalid dan Al-Musawwir",
+                    "3.1.2 Menerangkan hukum beriman dengan Al-Khalid dan Al-Musawwir",
+                    "3.2.1 Menerangkan konsep dosa dan pahala"
+                ],
+                "Ibadah": [
+                    "4.1.1 Menyatakan maksud solat jenazah",
+                    "4.1.2 Menjelaskan kaifiat dan rukun solat jenazah"
+                ],
+                "Sirah": [
+                    "5.1.1 Menyatakan peristiwa pembukaan kota Mekah (Fathu Makkah)",
+                    "5.1.2 Menganalisis faktor kejayaan pembukaan kota Mekah"
+                ],
+                "Adab": [
+                    "6.1.1 Menyatakan adab memelihara maruah diri",
+                    "6.1.2 Menghuraikan kepentingan menjaga maruah diri"
+                ],
+                "Jawi": [
+                    "7.1.1 Membaca teks jawi pelbagai tema dengan lancar",
+                    "7.1.2 Menulis khat Riq'ah dengan kaedah yang betul"
+                ]
+            }
+        };
+
+        const BIDANGS = ["Al-Quran", "Hadis", "Aqidah", "Ibadah", "Sirah", "Adab", "Jawi"];
+
+        function App() {
+            const [selectedYear, setSelectedYear] = useState("Tahun 4");
+            const [selectedClass, setSelectedClass] = useState("");
+            const [selectedBidang, setSelectedBidang] = useState("Al-Quran");
+            const [selectedSP, setSelectedSP] = useState("");
+            const [scores, setScores] = useState({});
+            const [activeTab, setActiveTab] = useState("perekodan"); // perekodan, analisis, laporan-ind, laporan-kelas, import-export
+            const [searchQuery, setSearchQuery] = useState("");
+            const [notification, setNotification] = useState(null);
+            const [confirmReset, setConfirmReset] = useState(false);
+            const [selectedStudentForReport, setSelectedStudentForReport] = useState("");
+            const [isExporting, setIsExporting] = useState(false);
+
+            // Fetch available classes based on Year
+            const availableClasses = useMemo(() => {
+                if (!selectedYear) return [];
+                return Object.keys(STUDENT_DATA[selectedYear] || {});
+            }, [selectedYear]);
+
+            // Set default class when year changes
+            useEffect(() => {
+                if (availableClasses.length > 0) {
+                    setSelectedClass(availableClasses[0]);
+                } else {
+                    setSelectedClass("");
+                }
+            }, [selectedYear, availableClasses]);
+
+            // Fetch available SPs based on Year + Bidang
+            const availableSPs = useMemo(() => {
+                if (!selectedYear || !selectedBidang) return [];
+                return STANDARDS_DATA[selectedYear]?.[selectedBidang] || [];
+            }, [selectedYear, selectedBidang]);
+
+            // Set default SP when year or bidang changes
+            useEffect(() => {
+                if (availableSPs.length > 0) {
+                    setSelectedSP(availableSPs[0]);
+                } else {
+                    setSelectedSP("");
+                }
+            }, [selectedYear, selectedBidang, availableSPs]);
+
+            useEffect(() => {
+                // Check if there is data in hash first (from shared link)
+                const hash = window.location.hash;
+                if (hash && hash.startsWith("#data=")) {
+                    try {
+                        const encodedData = hash.substring(6);
+                        const decodedString = decodeURIComponent(atob(encodedData));
+                        const sharedScores = JSON.parse(decodedString);
+                        if (sharedScores && typeof sharedScores === 'object') {
+                            setScores(sharedScores);
+                            localStorage.setItem("pi_tp_scores", JSON.stringify(sharedScores));
+                            showNotification("Berjaya mengimport data perkongsian!", "success");
+                            // Clear hash so it doesn't prompt again
+                            window.location.hash = "";
+                        }
+                    } catch (e) {
+                        showNotification("Gagal membaca pautan perkongsian data.", "error");
+                    }
+                } else {
+                    // Normal loading from local storage
+                    const storedScores = localStorage.getItem("pi_tp_scores");
+                    if (storedScores) {
+                        try {
+                            setScores(JSON.parse(storedScores));
+                        } catch (e) {
+                            console.error("Error loading scores from localstorage", e);
+                        }
+                    }
+                }
+            }, []);
+
+            // Auto-select first student in class when active tab changes to individual report
+            useEffect(() => {
+                if (selectedYear && selectedClass) {
+                    const students = STUDENT_DATA[selectedYear]?.[selectedClass] || [];
+                    if (students.length > 0 && !students.includes(selectedStudentForReport)) {
+                        setSelectedStudentForReport(students[0]);
+                    }
+                }
+            }, [selectedYear, selectedClass, activeTab]);
+
+            // Save to LocalStorage helper
+            const saveScores = (newScores) => {
+                setScores(newScores);
+                localStorage.setItem("pi_tp_scores", JSON.stringify(newScores));
+            };
+
+            const showNotification = (message, type = "success") => {
+                setNotification({ message, type });
+                setTimeout(() => setNotification(null), 3000);
+            };
+
+            const handleScoreChange = (studentName, tpValue) => {
+                const updatedScores = { ...scores };
+                
+                if (!updatedScores[studentName]) updatedScores[studentName] = {};
+                if (!updatedScores[studentName][selectedYear]) updatedScores[studentName][selectedYear] = {};
+                if (!updatedScores[studentName][selectedYear][selectedClass]) updatedScores[studentName][selectedYear][selectedClass] = {};
+                if (!updatedScores[studentName][selectedYear][selectedClass][selectedBidang]) updatedScores[studentName][selectedYear][selectedClass][selectedBidang] = {};
+                
+                updatedScores[studentName][selectedYear][selectedClass][selectedBidang][selectedSP] = tpValue;
+                
+                saveScores(updatedScores);
+            };
+
+            // Set all students to a specific TP for current selection
+            const handleBatchSetTP = (tpValue) => {
+                const students = STUDENT_DATA[selectedYear]?.[selectedClass] || [];
+                const updatedScores = { ...scores };
+
+                students.forEach(studentName => {
+                    if (!updatedScores[studentName]) updatedScores[studentName] = {};
+                    if (!updatedScores[studentName][selectedYear]) updatedScores[studentName][selectedYear] = {};
+                    if (!updatedScores[studentName][selectedYear][selectedClass]) updatedScores[studentName][selectedYear][selectedClass] = {};
+                    if (!updatedScores[studentName][selectedYear][selectedClass][selectedBidang]) updatedScores[studentName][selectedYear][selectedClass][selectedBidang] = {};
+                    
+                    updatedScores[studentName][selectedYear][selectedClass][selectedBidang][selectedSP] = tpValue;
+                });
+
+                saveScores(updatedScores);
+                showNotification(`Semua murid disetkan kepada TP ${tpValue}`, "success");
+            };
+
+            // Calculate TP average for a student in a specific Bidang
+            const calculateBidangAverage = (studentName, year, className, bidang) => {
+                const studentScores = scores[studentName]?.[year]?.[className]?.[bidang] || {};
+                const spList = STANDARDS_DATA[year]?.[bidang] || [];
+                
+                let sum = 0;
+                let count = 0;
+                
+                spList.forEach(sp => {
+                    const val = studentScores[sp];
+                    if (val && typeof val === 'number') {
+                        sum += val;
+                        count++;
+                    }
+                });
+                
+                if (count === 0) return "-";
+                return Math.round(sum / count);
+            };
+
+            // Calculate overall TP average across all 7 Bidang for a student
+            const calculateOverallAverage = (studentName, year, className) => {
+                let sum = 0;
+                let count = 0;
+
+                BIDANGS.forEach(bidang => {
+                    const avg = calculateBidangAverage(studentName, year, className, bidang);
+                    if (avg !== "-") {
+                        sum += avg;
+                        count++;
+                    }
+                });
+
+                if (count === 0) return "-";
+                return Math.round(sum / count);
+            };
+
+            // Reset scores for current Year + Class
+            const resetClassScores = () => {
+                const updatedScores = { ...scores };
+                const students = STUDENT_DATA[selectedYear]?.[selectedClass] || [];
+                
+                students.forEach(studentName => {
+                    if (updatedScores[studentName]?.[selectedYear]?.[selectedClass]) {
+                        delete updatedScores[studentName][selectedYear][selectedClass];
+                    }
+                });
+                
+                saveScores(updatedScores);
+                setConfirmReset(false);
+                showNotification("Rekod prestasi kelas ini telah dipadamkan.", "info");
+            };
+
+            const generateShareLink = () => {
+                try {
+                    const serializedData = JSON.stringify(scores);
+                    const encodedData = btoa(encodeURIComponent(serializedData));
+                    const shareUrl = `${window.location.origin}${window.location.pathname}#data=${encodedData}`;
+                    
+                    // Copy to clipboard
+                    const tempInput = document.createElement("input");
+                    tempInput.value = shareUrl;
+                    document.body.appendChild(tempInput);
+                    tempInput.select();
+                    document.execCommand("copy");
+                    document.body.removeChild(tempInput);
+                    
+                    showNotification("Pautan kongsi berjaya disalin ke clipboard!", "success");
+                } catch (e) {
+                    showNotification("Gagal menjana pautan kongsi.", "error");
+                }
+            };
+
+            const printIndividualPDF = (studentName) => {
+                setIsExporting(true);
+                setTimeout(() => {
+                    const element = document.getElementById(`individual-report-card-${studentName.replace(/\s+/g, '-')}`);
+                    const opt = {
+                        margin:       0.5,
+                        filename:     `Laporan_PI_${studentName.replace(/\s+/g, '_')}.pdf`,
+                        image:        { type: 'jpeg', quality: 0.98 },
+                        html2canvas:  { scale: 2 },
+                        jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+                    };
+                    html2pdf().from(element).set(opt).save().then(() => {
+                        setIsExporting(false);
+                        showNotification("Sijil PDF individu berjaya dimuat turun!");
+                    });
+                }, 100);
+            };
+
+            const printClassPDF = () => {
+                setIsExporting(true);
+                setTimeout(() => {
+                    const element = document.getElementById('class-report-sheet');
+                    const opt = {
+                        margin:       [0.3, 0.3, 0.3, 0.3],
+                        filename:     `Spreasheet_Kelas_${selectedYear.replace(/\s+/g, '_')}_${selectedClass.replace(/\s+/g, '_')}.pdf`,
+                        image:        { type: 'jpeg', quality: 0.98 },
+                        html2canvas:  { scale: 2, useCORS: true },
+                        jsPDF:        { unit: 'in', format: 'a4', orientation: 'landscape' }
+                    };
+                    html2pdf().from(element).set(opt).save().then(() => {
+                        setIsExporting(false);
+                        showNotification("Spreadsheet Kelas PDF berjaya dimuat turun!");
+                    });
+                }, 100);
+            };
+
+            // Backup & Restore files
+            const handleExportJSON = () => {
+                const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(scores, null, 2));
+                const downloadAnchor = document.createElement('a');
+                downloadAnchor.setAttribute("href", dataStr);
+                downloadAnchor.setAttribute("download", `pi_perekodan_backup_${new Date().toISOString().slice(0,10)}.json`);
+                document.body.appendChild(downloadAnchor);
+                downloadAnchor.click();
+                downloadAnchor.remove();
+                showNotification("Backup fail JSON berjaya!");
+            };
+
+            const handleImportJSON = (event) => {
+                const file = event.target.files[0];
+                if (!file) return;
+
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    try {
+                        const importedData = JSON.parse(e.target.result);
+                        if (importedData && typeof importedData === 'object') {
+                            const merged = { ...scores, ...importedData };
+                            saveScores(merged);
+                            showNotification("Data berjaya diimport daripada fail backup!", "success");
+                        } else {
+                            showNotification("Format fail backup tidak sah.", "error");
+                        }
+                    } catch (err) {
+                        showNotification("Gagal membaca fail backup.", "error");
+                    }
+                };
+                reader.readAsText(file);
+            };
+
+            // Filter student list
+            const filteredStudents = useMemo(() => {
+                const students = STUDENT_DATA[selectedYear]?.[selectedClass] || [];
+                if (!searchQuery) return students;
+                return students.filter(name => name.toLowerCase().includes(searchQuery.toLowerCase()));
+            }, [selectedYear, selectedClass, searchQuery]);
+
+            return (
+                <div class="flex-1 flex flex-col">
+                    
+                    {}
+                    {notification && (
+                        <div class={`fixed top-4 right-4 z-50 flex items-center p-4 rounded-xl shadow-lg border transition-all transform duration-300 ${
+                            notification.type === 'success' ? 'bg-emerald-50 border-emerald-200 text-emerald-800' :
+                            notification.type === 'error' ? 'bg-rose-50 border-rose-200 text-rose-800' :
+                            'bg-sky-50 border-sky-200 text-sky-800'
+                        }`}>
+                            <i class={`fa-solid mr-3 ${
+                                notification.type === 'success' ? 'fa-circle-check text-emerald-500' :
+                                notification.type === 'error' ? 'fa-circle-exclamation text-rose-500' :
+                                'fa-circle-info text-sky-500'
+                            }`}></i>
+                            <span class="font-medium text-sm">{notification.message}</span>
+                        </div>
+                    )}
+
+                    {}
+                    <header class="bg-gradient-to-r from-emerald-800 to-teal-900 text-white shadow-md no-print">
+                        <div class="max-w-7xl mx-auto px-4 py-4 sm:py-6 flex flex-col md:flex-row justify-between items-center gap-4">
+                            <div class="flex items-center space-x-3.5">
+                                <div class="bg-emerald-100/10 p-3 rounded-2xl border border-emerald-500/20">
+                                    <i class="fa-solid fa-mosque text-3xl text-emerald-300"></i>
+                                </div>
+                                <div>
+                                    <h1 class="text-xl sm:text-2xl font-bold tracking-tight text-emerald-50">Rekod Perkembangan Murid</h1>
+                                    <p class="text-xs sm:text-sm text-emerald-200 font-medium">Pentaksiran Tahap Penguasaan Pendidikan Islam KSSR</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex flex-wrap items-center gap-2.5">
+                                <button 
+                                    onClick={generateShareLink} 
+                                    class="bg-emerald-700/60 hover:bg-emerald-700 text-emerald-50 font-semibold px-4 py-2 rounded-xl border border-emerald-600/40 transition duration-200 flex items-center gap-2 text-sm"
+                                    title="Salin pautan perkongsian data pentaksiran"
+                                >
+                                    <i class="fa-solid fa-share-nodes"></i>
+                                    <span>Pautan Kongsi</span>
+                                </button>
+                                <button 
+                                    onClick={() => setActiveTab("import-export")}
+                                    class="bg-emerald-900/40 hover:bg-emerald-900/80 text-emerald-100 font-semibold px-4 py-2 rounded-xl border border-emerald-800/40 transition duration-200 flex items-center gap-2 text-sm"
+                                >
+                                    <i class="fa-solid fa-file-invoice"></i>
+                                    <span>Urus Fail</span>
+                                </button>
+                            </div>
+                        </div>
+                    </header>
+
+                    {}
+                    <nav class="bg-white border-b border-slate-200 sticky top-0 z-30 no-print shadow-sm">
+                        <div class="max-w-7xl mx-auto px-4">
+                            <div class="flex space-x-1 sm:space-x-4 overflow-x-auto py-2.5">
+                                <button 
+                                    onClick={() => setActiveTab("perekodan")}
+                                    class={`flex-none px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-150 ${
+                                        activeTab === "perekodan" 
+                                        ? "bg-emerald-50 text-emerald-700 shadow-sm border border-emerald-100" 
+                                        : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                                    }`}
+                                >
+                                    <i class="fa-solid fa-pen-to-square mr-2"></i>Kemasukan TP
+                                </button>
+                                <button 
+                                    onClick={() => setActiveTab("analisis")}
+                                    class={`flex-none px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-150 ${
+                                        activeTab === "analisis" 
+                                        ? "bg-emerald-50 text-emerald-700 shadow-sm border border-emerald-100" 
+                                        : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                                    }`}
+                                >
+                                    <i class="fa-solid fa-chart-simple mr-2"></i>Analisis Kelas
+                                </button>
+                                <button 
+                                    onClick={() => setActiveTab("laporan-ind")}
+                                    class={`flex-none px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-150 ${
+                                        activeTab === "laporan-ind" 
+                                        ? "bg-emerald-50 text-emerald-700 shadow-sm border border-emerald-100" 
+                                        : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                                    }`}
+                                >
+                                    <i class="fa-solid fa-address-card mr-2"></i>Laporan Individu
+                                </button>
+                                <button 
+                                    onClick={() => setActiveTab("laporan-kelas")}
+                                    class={`flex-none px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-150 ${
+                                        activeTab === "laporan-kelas" 
+                                        ? "bg-emerald-50 text-emerald-700 shadow-sm border border-emerald-100" 
+                                        : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                                    }`}
+                                >
+                                    <i class="fa-solid fa-table mr-2"></i>Cetak Laporan Kelas
+                                </button>
+                            </div>
+                        </div>
+                    </nav>
+
+                    {}
+                    <div class="bg-white border-b border-slate-200 py-4 shadow-sm no-print">
+                        <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="flex flex-col sm:flex-row gap-3">
+                                <div class="flex-1">
+                                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">1. Pilih Tahun</label>
+                                    <div class="relative">
+                                        <select 
+                                            value={selectedYear} 
+                                            onChange={(e) => setSelectedYear(e.target.value)}
+                                            class="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-3.5 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition appearance-none"
+                                        >
+                                            <option value="Tahun 4">Tahun 4</option>
+                                            <option value="Tahun 5">Tahun 5</option>
+                                            <option value="Tahun 6">Tahun 6</option>
+                                        </select>
+                                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-500">
+                                            <i class="fa-solid fa-chevron-down text-xs mr-1"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flex-1">
+                                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">2. Pilih Kelas</label>
+                                    <div class="relative">
+                                        <select 
+                                            value={selectedClass} 
+                                            onChange={(e) => setSelectedClass(e.target.value)}
+                                            disabled={availableClasses.length === 0}
+                                            class="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-3.5 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition appearance-none disabled:bg-slate-100 disabled:text-slate-400"
+                                        >
+                                            {availableClasses.map(cls => (
+                                                <option key={cls} value={cls}>{cls}</option>
+                                            ))}
+                                        </select>
+                                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-500">
+                                            <i class="fa-solid fa-chevron-down text-xs mr-1"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center justify-end">
+                                <div class="bg-emerald-50/50 rounded-xl px-4 py-3 border border-emerald-100 flex items-center gap-3 w-full md:w-auto">
+                                    <i class="fa-solid fa-users text-emerald-600 text-lg"></i>
+                                    <div>
+                                        <span class="text-xs text-slate-500 font-medium block">Jumlah Murid Terpilih</span>
+                                        <span class="text-sm font-bold text-slate-800">
+                                            {(STUDENT_DATA[selectedYear]?.[selectedClass] || []).length} Orang Murid
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {}
+                    <main class="flex-1 max-w-7xl w-full mx-auto p-4 flex flex-col gap-6">
+
+                        {/* TAB 1: PEREKODAN DATA */}
+                        {activeTab === "perekodan" && (
+                            <div class="flex flex-col gap-6">
+                                {/* Standard Pembelajaran & Bidang Dropdowns */}
+                                <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm flex flex-col lg:flex-row gap-4">
+                                    <div class="lg:w-1/4">
+                                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">3. Bidang Keilmuan</label>
+                                        <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-1 gap-2">
+                                            {BIDANGS.map(bidang => (
+                                                <button
+                                                    key={bidang}
+                                                    onClick={() => setSelectedBidang(bidang)}
+                                                    class={`text-left px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-between ${
+                                                        selectedBidang === bidang 
+                                                        ? "bg-emerald-600 text-white shadow-sm" 
+                                                        : "bg-slate-50 hover:bg-slate-100 text-slate-700"
+                                                    }`}
+                                                >
+                                                    <span>{bidang}</span>
+                                                    <span class="hidden lg:inline bg-white/20 px-2 py-0.5 rounded-full text-[10px]">
+                                                        {STANDARDS_DATA[selectedYear]?.[bidang]?.length || 0} SP
+                                                    </span>
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+
+                                    <div class="flex-1">
+                                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">
+                                            4. Standard Pembelajaran (SP) yang Diuji
+                                        </label>
+                                        <div class="relative">
+                                            <select
+                                                value={selectedSP}
+                                                onChange={(e) => setSelectedSP(e.target.value)}
+                                                class="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-4 py-3 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-emerald-500 transition appearance-none"
+                                            >
+                                                {availableSPs.map(sp => (
+                                                    <option key={sp} value={sp}>{sp}</option>
+                                                ))}
+                                            </select>
+                                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-500">
+                                                <i class="fa-solid fa-chevron-down text-sm"></i>
+                                            </div>
+                                        </div>
+
+                                        <div class="mt-4 bg-emerald-50/40 p-4 rounded-xl border border-emerald-100/50">
+                                            <h4 class="text-xs font-bold text-emerald-800 uppercase tracking-wider mb-1 flex items-center gap-1.5">
+                                                <i class="fa-solid fa-circle-info text-emerald-600"></i>
+                                                Penerangan Standard Pembelajaran Semasa
+                                            </h4>
+                                            <p class="text-xs sm:text-sm text-emerald-700 font-medium leading-relaxed">
+                                                {selectedSP || "Sila pilih Standard Pembelajaran terlebih dahulu."}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Students Recording Area */}
+                                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                                    <div class="p-5 border-b border-slate-200 flex flex-col sm:flex-row justify-between items-center gap-4 bg-slate-50/50">
+                                        <div class="flex-1 w-full relative">
+                                            <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
+                                                <i class="fa-solid fa-magnifying-glass text-sm"></i>
+                                            </span>
+                                            <input
+                                                type="text"
+                                                placeholder="Cari nama murid..."
+                                                value={searchQuery}
+                                                onChange={(e) => setSearchQuery(e.target.value)}
+                                                class="w-full sm:max-w-xs pl-9 pr-4 py-2 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                                            />
+                                        </div>
+                                        
+                                        <div class="flex flex-wrap items-center gap-2 w-full sm:w-auto justify-end">
+                                            <span class="text-xs font-bold text-slate-400 mr-2 uppercase tracking-wider">Set Segera TP Kelas:</span>
+                                            {[3, 4, 5, 6].map(tp => (
+                                                <button
+                                                    key={tp}
+                                                    onClick={() => handleBatchSetTP(tp)}
+                                                    class="bg-white hover:bg-emerald-50 border border-slate-200 hover:border-emerald-200 text-slate-700 hover:text-emerald-700 px-3 py-1.5 rounded-lg text-xs font-bold transition shadow-sm"
+                                                >
+                                                    TP {tp}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+
+                                    <div class="divide-y divide-slate-100 max-h-[600px] overflow-y-auto">
+                                        {filteredStudents.length === 0 ? (
+                                            <div class="py-12 text-center text-slate-400">
+                                                <i class="fa-solid fa-user-slash text-3xl mb-3"></i>
+                                                <p class="text-sm font-medium">Tiada murid dijumpai bagi carian ini.</p>
+                                            </div>
+                                        ) : (
+                                            filteredStudents.map((studentName, idx) => {
+                                                const currentTP = scores[studentName]?.[selectedYear]?.[selectedClass]?.[selectedBidang]?.[selectedSP];
+                                                
+                                                return (
+                                                    <div 
+                                                        key={studentName} 
+                                                        class="p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 hover:bg-slate-50 transition"
+                                                    >
+                                                        <div class="flex items-start gap-3.5 flex-1 min-w-0">
+                                                            <div class="bg-emerald-50 text-emerald-700 w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs flex-none">
+                                                                {idx + 1}
+                                                            </div>
+                                                            <div class="min-w-0">
+                                                                <h3 class="font-bold text-sm sm:text-base text-slate-800 leading-tight truncate">
+                                                                    {studentName}
+                                                                </h3>
+                                                                <p class="text-xs text-slate-500 font-medium mt-1">
+                                                                    {selectedYear} • {selectedClass}
+                                                                </p>
+                                                            </div>
+                                                        </div>
+
+                                                        {/* Touch friendly TP Selection buttons (TP 1 to 6) */}
+                                                        <div class="flex flex-wrap gap-1.5 sm:gap-2 justify-start sm:justify-end w-full sm:w-auto">
+                                                            {[1, 2, 3, 4, 5, 6].map(tp => {
+                                                                const isSelected = currentTP === tp;
+                                                                return (
+                                                                    <button
+                                                                        key={tp}
+                                                                        onClick={() => handleScoreChange(studentName, tp)}
+                                                                        class={`w-10 h-10 sm:w-11 sm:h-11 rounded-xl text-sm font-bold flex items-center justify-center transition-all ${
+                                                                            isSelected 
+                                                                            ? "bg-emerald-600 text-white shadow-md shadow-emerald-600/20 border border-emerald-600" 
+                                                                            : "bg-slate-50 border border-slate-200 text-slate-600 hover:bg-slate-100 hover:text-slate-800"
+                                                                        }`}
+                                                                    >
+                                                                        {tp}
+                                                                    </button>
+                                                                );
+                                                            })}
+                                                            {currentTP && (
+                                                                <button
+                                                                    onClick={() => handleScoreChange(studentName, null)}
+                                                                    class="w-10 h-10 sm:w-11 sm:h-11 rounded-xl text-xs bg-rose-50 border border-rose-100 text-rose-500 hover:bg-rose-100 font-semibold transition"
+                                                                    title="Padam rekod TP"
+                                                                >
+                                                                    <i class="fa-solid fa-trash-can"></i>
+                                                                </button>
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                );
+                                            })
+                                        )}
+                                    </div>
+                                    
+                                    <div class="p-5 border-t border-slate-100 bg-slate-50/30 flex justify-between items-center">
+                                        <button 
+                                            onClick={() => setConfirmReset(true)}
+                                            class="text-rose-600 hover:text-rose-700 bg-rose-50 hover:bg-rose-100/70 border border-rose-100 px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5"
+                                        >
+                                            <i class="fa-solid fa-trash-arrow-up"></i>
+                                            Padam Semua Rekod Kelas ini
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* TAB 2: ANALISIS KELAS (DASHBOARD) */}
+                        {activeTab === "analisis" && (
+                            <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm flex flex-col gap-6">
+                                <div class="flex justify-between items-center border-b border-slate-100 pb-4">
+                                    <div>
+                                        <h2 class="text-lg font-bold text-slate-800">Analisis Prestasi Bidang Kelas</h2>
+                                        <p class="text-xs text-slate-500 font-medium">Ringkasan Purata Tahap Penguasaan bagi setiap murid di {selectedClass}</p>
+                                    </div>
+                                </div>
+
+                                <div class="overflow-x-auto border border-slate-200 rounded-xl">
+                                    <table class="w-full text-left text-sm border-collapse">
+                                        <thead>
+                                            <tr class="bg-slate-50 border-b border-slate-200 text-slate-600 font-bold">
+                                                <th class="py-3.5 px-4 font-bold">Nama Murid</th>
+                                                {BIDANGS.map(b => (
+                                                    <th key={b} class="py-3.5 px-3 text-center font-bold">{b}</th>
+                                                ))}
+                                                <th class="py-3.5 px-4 text-center bg-emerald-50 text-emerald-800 font-extrabold">Purata Keseluruhan</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="divide-y divide-slate-100">
+                                            {(STUDENT_DATA[selectedYear]?.[selectedClass] || []).map((studentName) => {
+                                                const overallAvg = calculateOverallAverage(studentName, selectedYear, selectedClass);
+                                                return (
+                                                    <tr key={studentName} class="hover:bg-slate-50 transition">
+                                                        <td class="py-3 px-4 font-bold text-slate-700 text-xs sm:text-sm">{studentName}</td>
+                                                        {BIDANGS.map(bidang => {
+                                                            const avg = calculateBidangAverage(studentName, selectedYear, selectedClass, bidang);
+                                                            return (
+                                                                <td key={bidang} class="py-3 px-3 text-center">
+                                                                    <span class={`inline-flex items-center justify-center w-7 h-7 rounded-lg text-xs font-bold ${
+                                                                        avg === "-" 
+                                                                        ? "bg-slate-100 text-slate-400" 
+                                                                        : avg >= 5 
+                                                                        ? "bg-emerald-100 text-emerald-800" 
+                                                                        : avg >= 3 
+                                                                        ? "bg-amber-100 text-amber-800" 
+                                                                        : "bg-rose-100 text-rose-800"
+                                                                    }`}>
+                                                                        {avg}
+                                                                    </span>
+                                                                </td>
+                                                            );
+                                                        })}
+                                                        <td class="py-3 px-4 text-center bg-emerald-50/50 font-bold">
+                                                            <span class={`inline-flex items-center justify-center w-8 h-8 rounded-xl text-sm font-extrabold ${
+                                                                overallAvg === "-" 
+                                                                ? "bg-slate-100 text-slate-400" 
+                                                                : "bg-emerald-600 text-white shadow-sm"
+                                                            }`}>
+                                                                {overallAvg}
+                                                            </span>
+                                                        </td>
+                                                    </tr>
+                                                );
+                                            })}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* TAB 3: LAPORAN INDIVIDU (PDF GENERATION) */}
+                        {activeTab === "laporan-ind" && (
+                            <div class="flex flex-col gap-6">
+                                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row justify-between items-center gap-4">
+                                    <div class="w-full sm:w-1/3">
+                                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Pilih Murid untuk Laporan</label>
+                                        <div class="relative">
+                                            <select
+                                                value={selectedStudentForReport}
+                                                onChange={(e) => setSelectedStudentForReport(e.target.value)}
+                                                class="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-4 py-2.5 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-emerald-500 appearance-none"
+                                            >
+                                                {(STUDENT_DATA[selectedYear]?.[selectedClass] || []).map(std => (
+                                                    <option key={std} value={std}>{std}</option>
+                                                ))}
+                                            </select>
+                                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-500">
+                                                <i class="fa-solid fa-chevron-down text-sm"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button
+                                        onClick={() => printIndividualPDF(selectedStudentForReport)}
+                                        class="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-6 py-3 rounded-xl shadow-md transition duration-200 flex items-center justify-center gap-2"
+                                    >
+                                        <i class="fa-solid fa-file-pdf"></i>
+                                        Cetak PDF Laporan Individu
+                                    </button>
+                                </div>
+
+                                {/* Printable Report Card Card */}
+                                <div class="bg-slate-100 p-2 sm:p-6 rounded-2xl border border-slate-200 flex justify-center">
+                                    <div 
+                                        id={`individual-report-card-${selectedStudentForReport.replace(/\s+/g, '-')}`}
+                                        class="bg-white border-4 border-emerald-800/40 p-8 sm:p-12 w-full max-w-[800px] shadow-lg rounded-xl relative"
+                                    >
+                                        {/* Certificate/Report Header decoration */}
+                                        <div class="absolute top-0 inset-x-0 h-4 bg-gradient-to-r from-emerald-800 to-teal-900 rounded-t-lg"></div>
+                                        
+                                        <div class="text-center mb-8">
+                                            <i class="fa-solid fa-mosque text-emerald-800 text-4xl mb-3"></i>
+                                            <h1 class="text-xl sm:text-2xl font-black text-slate-800 tracking-tight">LAPORAN PRESTASI PENDIDIKAN ISLAM</h1>
+                                            <p class="text-xs sm:text-sm text-emerald-700 font-bold uppercase mt-1">Pentaksiran Bilik Darjah (PBD)</p>
+                                        </div>
+
+                                        {/* Student details */}
+                                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+                                            <div>
+                                                <span class="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">Nama Murid</span>
+                                                <span class="font-bold text-slate-800 text-sm sm:text-base">{selectedStudentForReport || "Sila pilih murid"}</span>
+                                            </div>
+                                            <div>
+                                                <span class="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">Tahun / Kelas</span>
+                                                <span class="font-bold text-slate-800 text-sm sm:text-base">{selectedYear} / {selectedClass}</span>
+                                            </div>
+                                        </div>
+
+                                        {/* Standards Table list per Bidang */}
+                                        <div class="space-y-6">
+                                            {BIDANGS.map(bidang => {
+                                                const average = calculateBidangAverage(selectedStudentForReport, selectedYear, selectedClass, bidang);
+                                                const spList = STANDARDS_DATA[selectedYear]?.[bidang] || [];
+                                                
+                                                return (
+                                                    <div key={bidang} class="border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                                                        <div class="bg-gradient-to-r from-emerald-800/10 to-teal-800/10 px-4 py-3 border-b border-slate-200 flex justify-between items-center">
+                                                            <h3 class="font-extrabold text-xs sm:text-sm text-emerald-900 uppercase">{bidang}</h3>
+                                                            <span class="text-xs font-bold text-emerald-800">
+                                                                Purata Bidang: <strong class="bg-emerald-600 text-white px-2 py-0.5 rounded-lg ml-1">{average}</strong>
+                                                            </span>
+                                                        </div>
+                                                        <table class="w-full text-left text-xs">
+                                                            <thead>
+                                                                <tr class="bg-slate-50 text-slate-500 font-bold border-b border-slate-200">
+                                                                    <th class="py-2.5 px-4 font-bold">Kod & Standard Pembelajaran (SP)</th>
+                                                                    <th class="py-2.5 px-4 text-center font-bold w-20">TP</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody class="divide-y divide-slate-100">
+                                                                {spList.map(sp => {
+                                                                    const score = scores[selectedStudentForReport]?.[selectedYear]?.[selectedClass]?.[bidang]?.[sp] || "-";
+                                                                    return (
+                                                                        <tr key={sp}>
+                                                                            <td class="py-2.5 px-4 font-medium text-slate-600 leading-relaxed">{sp}</td>
+                                                                            <td class="py-2.5 px-4 text-center font-bold text-slate-800 bg-slate-50/50">{score}</td>
+                                                                        </tr>
+                                                                    );
+                                                                })}
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
+
+                                        {/* Overall Summary block */}
+                                        <div class="mt-8 bg-emerald-50 border-2 border-emerald-600/20 p-6 rounded-2xl flex flex-col sm:flex-row justify-between items-center gap-4">
+                                            <div>
+                                                <h3 class="text-base font-extrabold text-slate-800">Rumusan Prestasi Keseluruhan</h3>
+                                                <p class="text-xs text-emerald-800 mt-1 font-semibold">Dikira daripada purata markah keseluruhan bidang Pendidikan Islam.</p>
+                                            </div>
+                                            <div class="bg-emerald-600 text-white px-5 py-3 rounded-2xl text-center shadow-md shadow-emerald-700/20">
+                                                <span class="text-[10px] uppercase font-bold tracking-wider block opacity-90">Purata TP</span>
+                                                <span class="text-3xl font-black">{calculateOverallAverage(selectedStudentForReport, selectedYear, selectedClass)}</span>
+                                            </div>
+                                        </div>
+
+                                        {/* Certificate Signatures */}
+                                        <div class="mt-12 pt-8 border-t border-slate-200 grid grid-cols-2 gap-8 text-center text-xs">
+                                            <div>
+                                                <div class="h-16"></div>
+                                                <div class="border-t border-slate-300 w-40 mx-auto pt-1.5 font-bold text-slate-600 uppercase">Tandatangan Guru</div>
+                                            </div>
+                                            <div>
+                                                <div class="h-16"></div>
+                                                <div class="border-t border-slate-300 w-40 mx-auto pt-1.5 font-bold text-slate-600 uppercase">Tandatangan Penjaga</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* TAB 4: CETAK LAPORAN KELAS (SPREADSHEET LANDSCAPE) */}
+                        {activeTab === "laporan-kelas" && (
+                            <div class="flex flex-col gap-6">
+                                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row justify-between items-center gap-4">
+                                    <div>
+                                        <h2 class="text-lg font-bold text-slate-800">Eksport Spreadsheet Kelas</h2>
+                                        <p class="text-xs text-slate-500 font-medium">Muat turun ringkasan prestasi penuh kelas {selectedClass} ({selectedYear}) format PDF Landscape.</p>
+                                    </div>
+                                    <button
+                                        onClick={printClassPDF}
+                                        class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-6 py-3 rounded-xl shadow-md transition duration-200 flex items-center justify-center gap-2 w-full sm:w-auto"
+                                    >
+                                        <i class="fa-solid fa-file-pdf"></i>
+                                        Cetak PDF Landscape Kelas
+                                    </button>
+                                </div>
+
+                                <div class="overflow-x-auto border border-slate-200 rounded-2xl bg-white p-6 shadow-sm">
+                                    <div id="class-report-sheet" class="w-full p-4 bg-white" style={{ minWidth: '950px' }}>
+                                        <div class="text-center mb-6">
+                                            <h1 class="text-lg font-black text-slate-800 tracking-tight uppercase">
+                                                SPREADSHEET PERKEMBANGAN MURID PENDIDIKAN ISLAM ({selectedYear})
+                                            </h1>
+                                            <p class="text-xs text-emerald-800 font-bold uppercase tracking-wider">
+                                                KELAS: {selectedClass} • SEKOLAH RENDAH KERAJAAN MALAYSIA
+                                            </p>
+                                        </div>
+
+                                        <table class="w-full text-xs border-collapse border border-slate-300 text-left">
+                                            <thead>
+                                                <tr class="bg-slate-50 text-slate-700 font-bold border-b border-slate-300">
+                                                    <th class="border border-slate-300 p-2 font-bold w-12 text-center">BIL</th>
+                                                    <th class="border border-slate-300 p-2 font-bold min-w-[250px]">NAMA MURID</th>
+                                                    {BIDANGS.map(bidang => (
+                                                        <th key={bidang} class="border border-slate-300 p-2 font-bold text-center w-24 uppercase">{bidang}</th>
+                                                    ))}
+                                                    <th class="border border-slate-300 p-2 font-bold text-center w-28 bg-emerald-50 text-emerald-900 uppercase">TP KESELURUHANN</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {(STUDENT_DATA[selectedYear]?.[selectedClass] || []).map((studentName, index) => {
+                                                    const overallAvg = calculateOverallAverage(studentName, selectedYear, selectedClass);
+                                                    return (
+                                                        <tr key={studentName} class="hover:bg-slate-50/50">
+                                                            <td class="border border-slate-300 p-2 text-center font-bold">{index + 1}</td>
+                                                            <td class="border border-slate-300 p-2 font-bold text-slate-800">{studentName}</td>
+                                                            {BIDANGS.map(bidang => {
+                                                                const avg = calculateBidangAverage(studentName, selectedYear, selectedClass, bidang);
+                                                                return (
+                                                                    <td key={bidang} class="border border-slate-300 p-2 text-center font-bold">
+                                                                        {avg}
+                                                                    </td>
+                                                                );
+                                                            })}
+                                                            <td class="border border-slate-300 p-2 text-center font-black bg-emerald-50/40 text-emerald-800">
+                                                                {overallAvg}
+                                                            </td>
+                                                        </tr>
+                                                    );
+                                                })}
+                                            </tbody>
+                                        </table>
+
+                                        <div class="mt-8 pt-6 grid grid-cols-2 text-xs font-bold text-slate-600 border-t border-dashed border-slate-300">
+                                            <div>
+                                                Disediakan oleh:<br />
+                                                <div class="h-10"></div>
+                                                ..................................................<br />
+                                                ( Guru Pendidikan Islam )
+                                            </div>
+                                            <div class="text-right">
+                                                Tarikh Penjanaan Laporan:<br />
+                                                <span class="text-slate-800 font-extrabold">{new Date().toLocaleDateString('ms-MY', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* TAB 5: IMPORT / EXPORT (MANAGE DATA BACKUP) */}
+                        {activeTab === "import-export" && (
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col gap-4">
+                                    <div>
+                                        <i class="fa-solid fa-file-arrow-down text-3xl text-emerald-600 mb-3"></i>
+                                        <h3 class="text-base font-bold text-slate-800">Backup Data Pentaksiran</h3>
+                                        <p class="text-xs text-slate-500 font-medium leading-relaxed mt-1">
+                                            Muat turun keseluruhan pangkalan data Tahap Penguasaan murid Pendidikan Islam ke komputer/telefon pintar anda sebagai fail JSON. Boleh digunakan untuk tujuan simpanan luar talian.
+                                        </p>
+                                    </div>
+                                    <button
+                                        onClick={handleExportJSON}
+                                        class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-4 rounded-xl transition flex items-center justify-center gap-2"
+                                    >
+                                        <i class="fa-solid fa-download"></i>
+                                        Muat Turun Fail Backup (.json)
+                                    </button>
+                                </div>
+
+                                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between gap-4">
+                                    <div>
+                                        <i class="fa-solid fa-file-arrow-up text-3xl text-emerald-600 mb-3"></i>
+                                        <h3 class="text-base font-bold text-slate-800">Muat Naik Data (Restore)</h3>
+                                        <p class="text-xs text-slate-500 font-medium leading-relaxed mt-1">
+                                            Pilih fail backup (.json) yang telah disimpan sebelumnya untuk memuat semula semua rekod prestasi murid anda ke dalam pelayar web peranti ini.
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <label class="w-full bg-slate-50 hover:bg-slate-100 border-2 border-dashed border-slate-200 text-slate-600 font-bold py-3 px-4 rounded-xl transition flex items-center justify-center gap-2 cursor-pointer text-sm">
+                                            <i class="fa-solid fa-upload"></i>
+                                            <span>Pilih & Import Fail Backup</span>
+                                            <input 
+                                                type="file" 
+                                                accept=".json" 
+                                                onChange={handleImportJSON} 
+                                                class="hidden" 
+                                            />
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                    </main>
+
+                    {/* CONFIRMATION MODALS (Replaces traditional Window.confirm/alert) */}
+                    {confirmReset && (
+                        <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+                            <div class="bg-white w-full max-w-md p-6 rounded-2xl border border-slate-200 shadow-xl">
+                                <div class="text-center">
+                                    <div class="bg-rose-50 border border-rose-100 text-rose-600 w-12 h-12 rounded-full flex items-center justify-center mx-auto text-xl mb-4">
+                                        <i class="fa-solid fa-triangle-exclamation"></i>
+                                    </div>
+                                    <h3 class="text-lg font-bold text-slate-800 mb-2">Padam Rekod Kelas Semasa?</h3>
+                                    <p class="text-xs sm:text-sm text-slate-500 leading-relaxed">
+                                        Adakah anda pasti mahu memadamkan semua rekod Tahap Penguasaan murid dalam kelas <strong class="text-slate-800">{selectedClass}</strong> bagi tahun ini? Tindakan ini tidak boleh diundurkan.
+                                    </p>
+                                </div>
+                                <div class="grid grid-cols-2 gap-3 mt-6">
+                                    <button
+                                        onClick={() => setConfirmReset(false)}
+                                        class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold py-2.5 rounded-xl text-sm transition"
+                                    >
+                                        Batal
+                                    </button>
+                                    <button
+                                        onClick={resetClassScores}
+                                        class="bg-rose-600 hover:bg-rose-700 text-white font-semibold py-2.5 rounded-xl text-sm transition"
+                                    >
+                                        Ya, Padam Semua
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* App Footer */}
+                    <footer class="bg-slate-100 border-t border-slate-200 py-6 text-center text-xs text-slate-500 font-medium mt-12 no-print">
+                        <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row justify-between items-center gap-4">
+                            <p>© {new Date().getFullYear()} Rekod Pentaksiran Pendidikan Islam. Hak Cipta Terpelihara.</p>
+                            <div class="flex gap-4">
+                                <a href="#" class="hover:text-emerald-700">Dokumentasi</a>
+                                <span>•</span>
+                                <a href="#" class="hover:text-emerald-700">Panduan Pengguna</a>
+                            </div>
+                        </div>
+                    </footer>
+
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('app'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
